@@ -185,26 +185,7 @@ Note: `error_probabilities` must be in (0, 0.5]; pass explicit `weights` for p >
 
 ## Mathematical Formulation
 
-### ILP Model for QEC Decoding
-
-Given:
-- Binary parity-check matrix H ∈ {0,1}^{m×n}
-- Syndrome s ∈ {0,1}^m
-- Weights w ∈ ℝ^n (typically w_j = log((1-p_j)/p_j))
-
-**Decision Variables:**
-- e_j ∈ {0,1} for j = 0,...,n-1 (error indicators)
-- a_i ∈ ℤ≥0 for i = 0,...,m-1 (auxiliary for mod-2 linearization)
-
-**Objective:**
-```
-minimize Σ_j w_j · e_j
-```
-
-**Constraints (mod-2 linearization):**
-```
-Σ_j H[i,j] · e_j - s_i = 2·a_i    for i = 0,...,m-1
-```
+See `doc/mathematical-formulation.md`.
 
 ## Solver Options
 
