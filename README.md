@@ -1,5 +1,8 @@
 # ILPDecoder
 
+[![CI](https://github.com/nzy1997/ILPDecoder/actions/workflows/ci.yml/badge.svg)](https://github.com/nzy1997/ILPDecoder/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/nzy1997/ILPDecoder/branch/main/graph/badge.svg)](https://codecov.io/gh/nzy1997/ILPDecoder)
+
 An ILP-based Quantum Error Correction (QEC) decoder built on **Pyomo** for solver-agnostic optimization modeling.
 
 ## Overview
@@ -52,8 +55,8 @@ pip install highspy
 
 ```bash
 # Clone the repository
-git clone https://github.com/ilpdecoder/ilpdecoder
-cd ilpdecoder
+git clone https://github.com/nzy1997/ILPDecoder
+cd ILPDecoder
 
 # Create virtual environment (using uv)
 uv venv
