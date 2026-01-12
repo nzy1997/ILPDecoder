@@ -22,6 +22,9 @@ pip install ilpdecoder
 
 # With Stim support
 pip install ilpdecoder[stim]
+
+# With SciPy sparse-matrix support
+pip install ilpdecoder[scipy]
 ```
 
 ### Installing Solvers
@@ -118,6 +121,8 @@ syndrome = [1, 0, 0, 1]
 correction = decoder.decode(syndrome)
 print(f"Correction: {correction}")
 ```
+
+Note: passing SciPy sparse matrices requires `scipy` to be installed (e.g., `pip install ilpdecoder[scipy]`).
 
 ### Switching Solvers
 

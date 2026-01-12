@@ -27,12 +27,13 @@ Example Usage:
     correction, observables = decoder.decode(detector_outcomes)
 """
 
-from typing import Union, List, Optional, Tuple, Dict, Any
+from __future__ import annotations
+
+from typing import Union, List, Optional, Tuple, Dict, Any, TYPE_CHECKING
 from pathlib import Path
 import math
 
 import numpy as np
-from scipy.sparse import spmatrix
 
 from pyomo.environ import (
     ConcreteModel,
@@ -53,6 +54,9 @@ from ilpdecoder.solver import (
     get_pyomo_solver_name,
     get_available_solvers,
 )
+
+if TYPE_CHECKING:
+    from scipy.sparse import spmatrix
 
 
 class Decoder:
@@ -141,9 +145,18 @@ class Decoder:
         decoder = cls()
         
         # Convert to numpy array
-        if isinstance(parity_check_matrix, spmatrix):
+        try:
+            from scipy.sparse import spmatrix  # type: ignore
+        except Exception:
+            spmatrix = None
+        if spmatrix is not None and isinstance(parity_check_matrix, spmatrix):
             H = parity_check_matrix.toarray()
         else:
+            if spmatrix is None and hasattr(parity_check_matrix, "toarray"):
+                raise ImportError(
+                    "Sparse parity-check matrices require SciPy. "
+                    "Install with: pip install scipy"
+                )
             H = np.asarray(parity_check_matrix)
         
         decoder._H = H % 2  # Ensure binary
