@@ -27,6 +27,8 @@ pip install ilpdecoder[scipy]
 
 ## Quickstart
 
+### Parity-check matrix decoding
+
 ```python
 import numpy as np
 from ilpdecoder import Decoder
@@ -36,35 +38,42 @@ H = np.array([
     [0, 1, 1],
 ], dtype=np.uint8)
 
-# Build a decoder from a parity-check matrix.
+# Uses direct HiGHS by default.
 decoder = Decoder.from_parity_check_matrix(H)
 
-# Example syndrome and decode.
 syndrome = np.array([1, 0], dtype=np.uint8)
 error, _ = decoder.decode(syndrome)
 print(error)
 ```
 
-## Solver Backends
+### Stim DetectorErrorModel decoding
 
-- Direct HiGHS: default backend, installed with the package.
-- Direct Gurobi: optional licensed backend via `pip install ilpdecoder[gurobi]`.
-- Pyomo backend: optional solver switching (SCIP, CBC, GLPK, Gurobi, CPLEX) via
-  `pip install ilpdecoder[pyomo]`.
+```python
+import stim
+from ilpdecoder import Decoder
 
-## Stim DEM Notes
+circuit = stim.Circuit.generated(
+    "surface_code:rotated_memory_x",
+    distance=3,
+    rounds=3,
+    after_clifford_depolarization=0.01,
+)
 
-- Only `error(p)` lines are parsed; tags in `error[...]` are ignored.
-- `detector` and `logical_observable` metadata lines are ignored.
-- `shift_detectors` offsets are applied.
-- `repeat` blocks are flattened by default; set `flatten_dem=False` to disable.
-- `detector_separator` is unsupported and raises an error.
-- The `^` separator is treated as whitespace. For correlated mechanisms, prefer
-  `decompose_errors=True` in Stim to avoid ambiguous alternatives.
+dem = circuit.detector_error_model(decompose_errors=True)
+decoder = Decoder.from_stim_dem(dem)
 
-## Build This Site
+sampler = circuit.compile_detector_sampler()
+detections, observables = sampler.sample(shots=100, separate_observables=True)
 
-```bash
-pip install .[docs]
-mkdocs serve
+for i in range(5):
+    _, predicted = decoder.decode(detections[i])
+    print(f"shot {i}: predicted={predicted}, actual={observables[i]}")
 ```
+
+## Documentation Map
+
+- Solver backends and configuration: `solvers.md`
+- ILP formulation and assumptions: `math.md`
+- Stim DEM support and caveats: `stim_dem.md`
+- Examples walkthrough: `examples.md`
+- Benchmarks and scripts: `benchmarks.md`
