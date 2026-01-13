@@ -3,16 +3,14 @@
 [![CI](https://github.com/nzy1997/ILPDecoder/actions/workflows/ci.yml/badge.svg)](https://github.com/nzy1997/ILPDecoder/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/nzy1997/ILPDecoder/branch/main/graph/badge.svg)](https://codecov.io/gh/nzy1997/ILPDecoder)
 
-ILPDecoder is a Python package for maximum-likelihood quantum error correction decoding using integer linear programming (ILP). It turns parity-check matrices or Stim `DetectorErrorModel`s into an ILP and solves it with a **direct HiGHS** backend by default (no Pyomo required). An optional **direct Gurobi** backend is available for licensed users. It is aimed at correctness-focused baselines, solver comparisons, and small-to-medium code studies rather than high-throughput production decoding.
+ILPDecoder is a Python package for maximum-likelihood quantum error correction decoding using integer linear programming (ILP). It turns parity-check matrices or Stim `DetectorErrorModel`s into an ILP and solves it with a built-in backend out of the box. It is aimed at correctness-focused baselines, solver comparisons, and small-to-medium code studies rather than high-throughput production decoding.
 
 Documentation: https://nzy1997.github.io/ILPDecoder/
 
 ## Scope and Highlights
 
 What it does well:
-- **Direct HiGHS decoding** out of the box (no Pyomo dependency).
-- **Optional direct Gurobi backend** when `gurobipy` is installed.
-- **Optional solver switching** via Pyomo (SCIP, Gurobi, CPLEX, CBC, GLPK) when installed.
+- **Out-of-the-box decoding** with minimal setup.
 - **Inputs from parity-check matrices** or **Stim DetectorErrorModel**.
 - **Maximum-likelihood decoding** via weights or error probabilities.
 - **PyMatching-like API** for easy experimentation.
@@ -23,58 +21,14 @@ When it is not a fit:
 ## Installation
 
 ```bash
-# Basic installation (direct HiGHS backend)
+# Basic installation
 pip install ilpdecoder
-
-# Optional: Pyomo backend for other solvers
-pip install ilpdecoder[pyomo]
-
-# Optional: direct Gurobi backend (licensed)
-pip install ilpdecoder[gurobi]
 
 # With Stim support
 pip install ilpdecoder[stim]
 
 # With SciPy sparse-matrix support
 pip install ilpdecoder[scipy]
-```
-
-Note: the `gurobi` extra installs `gurobipy` wheels for Python 3.9-3.12. On
-Python 3.13+ install `gurobipy` manually or use the Pyomo backend.
-
-### Installing Solvers
-
-The default backend uses HiGHS via `highspy` (installed with ILPDecoder). For
-direct Gurobi, install `gurobipy`. For other solvers, install the Pyomo extra
-and a solver binary:
-
-```bash
-# Pyomo backend for alternate solvers
-pip install ilpdecoder[pyomo]
-
-# Direct Gurobi backend (licensed)
-pip install ilpdecoder[gurobi]
-
-# Gurobi wheels are typically available for Python 3.9-3.12.
-# For Python 3.13+ install gurobipy manually or use the Pyomo backend.
-
-# SCIP (open-source)
-# Download from: https://www.scipopt.org/
-# Or via conda: conda install -c conda-forge scip
-
-# CBC (open-source)
-# Ubuntu/Debian: apt install coinor-cbc
-# macOS: brew install cbc
-
-# GLPK (open-source)
-# Ubuntu/Debian: apt install glpk-utils
-# macOS: brew install glpk
-
-# Gurobi (commercial, free academic license)
-# https://www.gurobi.com/
-
-# CPLEX (commercial, free academic license)
-# https://www.ibm.com/products/ilog-cplex-optimization-studio
 ```
 
 ### Development Setup
@@ -137,7 +91,7 @@ H = np.array([
     [0, 0, 0, 1, 1],
 ])
 
-# Create decoder (uses HiGHS by default)
+# Create decoder
 decoder = Decoder.from_parity_check_matrix(H)
 
 # Decode a syndrome
@@ -147,20 +101,6 @@ print(f"Correction: {correction}")
 ```
 
 Note: passing SciPy sparse matrices requires `scipy` to be installed (e.g., `pip install ilpdecoder[scipy]`).
-
-### Switching Solvers
-
-```python
-# Use SCIP instead of HiGHS
-decoder = Decoder.from_parity_check_matrix(H, solver="scip")
-
-# Or change solver later
-decoder.set_solver("gurobi", time_limit=30)
-decoder.set_solver("cplex", gap=0.01)
-```
-
-Note: non-HiGHS solvers require the Pyomo extra (`pip install ilpdecoder[pyomo]`),
-except for the direct Gurobi backend (`pip install ilpdecoder[gurobi]`).
 
 ### Stim DetectorErrorModel Decoding
 
@@ -180,7 +120,7 @@ circuit = stim.Circuit.generated(
 dem = circuit.detector_error_model(decompose_errors=True)
 
 # Create decoder
-decoder = Decoder.from_stim_dem(dem, solver="scip")
+decoder = Decoder.from_stim_dem(dem)
 
 # Sample and decode
 sampler = circuit.compile_detector_sampler()
@@ -227,12 +167,7 @@ Install optional deps for the benchmarks:
 pip install stim pymatching ldpc
 ```
 
-Non-HiGHS solvers require the Pyomo extra (`pip install ilpdecoder[pyomo]`),
-except for the direct Gurobi backend (`pip install ilpdecoder[gurobi]`).
-
 Notes:
-- Direct backends: HiGHS, Gurobi.
-- Pyomo backends: HiGHS, SCIP, CBC, GLPK, Gurobi, CPLEX.
 - BPOSD runs with `max_iter=50`, `osd_order=0`, and `bp_method=minimum_sum`.
 
 ### Circuit-level rotated surface code memory
@@ -247,9 +182,9 @@ Results from a local macOS arm64 run (shots=10000, your numbers will vary):
 |--------|---------------|--------------------|
 | ILP[highs] (direct) | 2.7469 | 1.610% |
 | ILP[gurobi] (direct) | 0.5923 | 1.620% |
-| ILP[scip] (Pyomo) | 27.1241 | 1.620% |
-| ILP[cbc] (Pyomo) | 13.7808 | 1.620% |
-| ILP[glpk] (Pyomo) | 7.8176 | 1.610% |
+| ILP[scip] | 27.1241 | 1.620% |
+| ILP[cbc] | 13.7808 | 1.620% |
+| ILP[glpk] | 7.8176 | 1.610% |
 | MWPM (pymatching) | 0.0034 | 2.090% |
 | BPOSD (ldpc) | 0.0308 | 7.740% |
 
@@ -265,9 +200,9 @@ Results from a local macOS arm64 run (shots=10000, your numbers will vary):
 |--------|---------------|--------------------|
 | ILP[highs] (direct) | 3.1914 | 0.120% |
 | ILP[gurobi] (direct) | 0.0826 | 0.120% |
-| ILP[scip] (Pyomo) | 22.6194 | 0.120% |
-| ILP[cbc] (Pyomo) | 9.8211 | 0.120% |
-| ILP[glpk] (Pyomo) | 4.7919 | 0.120% |
+| ILP[scip] | 22.6194 | 0.120% |
+| ILP[cbc] | 9.8211 | 0.120% |
+| ILP[glpk] | 4.7919 | 0.120% |
 | MWPM (pymatching) | 0.0033 | 0.120% |
 | BPOSD (ldpc) | 0.0029 | 0.120% |
 
@@ -283,39 +218,11 @@ Results from a local macOS arm64 run (shots=10000, your numbers will vary):
 |--------|---------------|--------------------|
 | ILP[highs] (direct) | 2.0008 | 4.510% |
 | ILP[gurobi] (direct) | 0.3164 | 4.500% |
-| ILP[scip] (Pyomo) | 24.0461 | 4.500% |
-| ILP[cbc] (Pyomo) | 11.0780 | 4.510% |
-| ILP[glpk] (Pyomo) | 5.8961 | 4.500% |
+| ILP[scip] | 24.0461 | 4.500% |
+| ILP[cbc] | 11.0780 | 4.510% |
+| ILP[glpk] | 5.8961 | 4.500% |
 | MWPM (pymatching) | 0.0041 | 13.610% |
 | BPOSD (ldpc) | 0.0124 | 9.970% |
-
-## Solver Options
-
-```python
-decoder.set_solver(
-    "scip",            # Solver name (Pyomo required)
-    direct=False,      # Use Pyomo backend
-    time_limit=30,     # Max solving time (seconds)
-    gap=0.01,          # Relative ILP gap tolerance
-    threads=4,         # Number of threads (solver-dependent)
-    verbose=True,      # Print solver output
-)
-```
-
-| Option | Description | Supported Solvers |
-|--------|-------------|-------------------|
-| `time_limit` | Max solving time (seconds) | All |
-| `gap` | Relative ILP gap tolerance | All |
-| `threads` | Number of threads | HiGHS, Gurobi, CPLEX |
-| `verbose` | Print solver output | All |
-| `direct` | Use direct backend (default for HiGHS) | HiGHS, Gurobi |
-
-Note: `direct` defaults to True when `solver="highs"`. For Gurobi, it defaults
-to True when `gurobipy` is installed; set `direct=False` to use Pyomo.
-
-Backend map:
-- Direct backends: HiGHS, Gurobi.
-- Pyomo backends: HiGHS, SCIP, CBC, GLPK, Gurobi, CPLEX.
 
 ## API Reference
 
