@@ -102,7 +102,7 @@ def build_pymatching(dem):
 def build_tesseract(dem, det_beam=50):
     """Construct a tesseract decoder from a Stim DEM."""
     try:
-        import tesseract
+        from tesseract_decoder import tesseract
     except Exception as exc:
         raise ImportError("tesseract-decoder is required (pip install tesseract-decoder)") from exc
     config = tesseract.TesseractConfig(dem=dem, det_beam=det_beam)
