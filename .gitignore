@@ -1,6 +1,7 @@
 # Reference repositories (not part of this project)
 PyMatching/
 Stim/
+ldpc/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

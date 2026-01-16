@@ -29,5 +29,6 @@ nav:
   - Solver Backends: solvers.md
   - Mathematical Formulation: math.md
   - Stim DEM Support: stim_dem.md
+  - Sinter Integration: sinter.md
   - Examples: examples.md
   - Benchmarks: benchmarks.md
