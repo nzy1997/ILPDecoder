@@ -1,6 +1,7 @@
 # Reference repositories (not part of this project)
 PyMatching/
 Stim/
+ldpc/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -90,3 +91,7 @@ Thumbs.db
 
 # uv
 uv.lock
+
+# Bazel build caches (used by tesseract wheel builds)
+benchmark/.bazel/
+benchmark/.bazel-user/

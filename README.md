@@ -20,15 +20,42 @@ When it is not a fit:
 
 ## Installation
 
+### Python Environment Setup
+
+ILPDecoder supports Python 3.9+ (3.9–3.12 recommended). If you plan to use
+Gurobi, install Python < 3.13 because `gurobipy` wheels are not available on
+3.13 at the moment.
+
+Create and activate a virtual environment:
+
+```bash
+uv venv
+source .venv/bin/activate
+uv pip install --upgrade pip
+```
+
+On Windows:
+
+```bash
+uv venv
+.venv\\Scripts\\activate
+uv pip install --upgrade pip
+```
+
+### Install the Package
+
 ```bash
 # Basic installation
-pip install ilpdecoder
+uv pip install ilpdecoder
 
 # With Stim support
-pip install ilpdecoder[stim]
+uv pip install ilpdecoder[stim]
+
+# With sinter integration
+uv pip install ilpdecoder[sinter]
 
 # With SciPy sparse-matrix support
-pip install ilpdecoder[scipy]
+uv pip install ilpdecoder[scipy]
 ```
 
 ### Development Setup
@@ -43,36 +70,37 @@ uv venv
 source .venv/bin/activate
 
 # Install with dev dependencies
-uv add highspy numpy scipy stim
-uv add pyomo --dev
-uv add pytest --dev
-
-# Or using pip
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 ### Running Tests Locally
 
 ```bash
-# Activate virtual environment
-source .venv/bin/activate
-
 # Run all tests
-pytest tests/ -v
+uv run pytest tests/ -v
 
 # Run specific test file
-pytest tests/test_decoder.py -v
+uv run pytest tests/test_decoder.py -v
 
 # Run a quick functionality check
-python main.py
+uv run python main.py
 ```
 
 ### Running Examples
 
 ```bash
-python examples/basic_usage.py
-python examples/surface_code_example.py
-benchmark/.venv/bin/python benchmark/benchmark_decoders.py --shots 10000 --distance 3 --rounds 3 --noise 0.01
+uv run python examples/basic_usage.py
+uv run python examples/surface_code_example.py
+uv run --python benchmark/.venv/bin/python benchmark/benchmark_decoders.py \
+  --shots 10000 --distance 3 --rounds 3 --noise 0.01
+```
+
+### Serve Docs Locally
+
+```bash
+# From the repo root
+uv pip install -e ".[docs]"
+uv run mkdocs serve
 ```
 
 ## Quick Start
@@ -100,7 +128,7 @@ correction = decoder.decode(syndrome)
 print(f"Correction: {correction}")
 ```
 
-Note: passing SciPy sparse matrices requires `scipy` to be installed (e.g., `pip install ilpdecoder[scipy]`).
+Note: passing SciPy sparse matrices requires `scipy` to be installed (e.g., `uv pip install ilpdecoder[scipy]`).
 
 ### Stim DetectorErrorModel Decoding
 
@@ -140,6 +168,46 @@ for i in range(10):
 - The `^` separator is treated as whitespace and does not change parsing.
 - If you want to fail fast instead of flattening, pass `flatten_dem=False`.
 
+### Sinter Integration (optional)
+
+ILPDecoder includes a sinter decoder wrapper for benchmarking and sampling.
+Install with:
+
+```bash
+uv pip install ilpdecoder[sinter]
+```
+
+Example usage:
+
+```python
+import sinter
+import stim
+from ilpdecoder.sinter_decoder import SinterIlpDecoder
+
+circuit = stim.Circuit.generated(
+    "surface_code:rotated_memory_x",
+    distance=3,
+    rounds=3,
+    after_clifford_depolarization=0.01,
+)
+
+tasks = [
+    sinter.Task(
+        circuit=circuit,
+        decoder="ilpdecoder",
+    )
+]
+
+stats = sinter.collect(
+    tasks=tasks,
+    custom_decoders={"ilpdecoder": SinterIlpDecoder()},
+)
+```
+
+Notes:
+- The sinter adapter currently uses the direct HiGHS backend only.
+- `ilpdecoder[sinter]` includes `stim` and `sinter` dependencies.
+
 ### Maximum-Likelihood Decoding with Weights
 
 ```python
@@ -161,20 +229,32 @@ Note: `error_probabilities` must be in (0, 0.5]; pass explicit `weights` for p >
 
 ## Benchmark
 
-Install optional deps for the benchmarks:
+Benchmarks use extra dependencies and optional solver backends. Use a dedicated
+virtual environment under `benchmark/`:
 
 ```bash
-pip install stim pymatching ldpc tesseract-decoder
+uv venv benchmark/.venv
+uv pip install --python benchmark/.venv/bin/python --upgrade pip
+
+# ILPDecoder + optional solver backends
+uv pip install --python benchmark/.venv/bin/python -e ".[pyomo,gurobi]"
+
+# Benchmark dependencies
+uv pip install --python benchmark/.venv/bin/python stim pymatching ldpc tesseract-decoder
 ```
 
 Notes:
+- Gurobi requires a valid license and Python < 3.13.
+- If you do not need Gurobi, drop `gurobi` from the extras.
 - BPOSD runs with `max_iter=50`, `osd_order=0`, and `bp_method=minimum_sum`.
 - Tesseract runs with `det_beam=50` by default (adjustable via `--tesseract-beam`).
 
 ### Circuit-level rotated surface code memory
 
 ```bash
-benchmark/.venv/bin/python benchmark/benchmark_decoders.py --compare-ilp-solvers --ilp-solvers highs,scip,gurobi,cbc,glpk --shots 10000 --distance 3 --rounds 3 --noise 0.01
+uv run --python benchmark/.venv/bin/python benchmark/benchmark_decoders.py \
+  --compare-ilp-solvers --ilp-solvers highs,scip,gurobi,cbc,glpk \
+  --shots 10000 --distance 3 --rounds 3 --noise 0.01
 ```
 
 Results from a local macOS arm64 run (shots=10000, your numbers will vary):
@@ -193,7 +273,9 @@ Results from a local macOS arm64 run (shots=10000, your numbers will vary):
 ### Code-capacity surface code (data errors only, perfect syndrome)
 
 ```bash
-benchmark/.venv/bin/python benchmark/benchmark_decoders.py --noise-model code_capacity --compare-ilp-solvers --ilp-solvers highs,scip,gurobi,cbc,glpk --shots 10000 --distance 3 --rounds 1 --noise 0.01
+uv run --python benchmark/.venv/bin/python benchmark/benchmark_decoders.py \
+  --noise-model code_capacity --compare-ilp-solvers --ilp-solvers highs,scip,gurobi,cbc,glpk \
+  --shots 10000 --distance 3 --rounds 1 --noise 0.01
 ```
 
 Results from a local macOS arm64 run (shots=10000, your numbers will vary):
@@ -212,7 +294,9 @@ Results from a local macOS arm64 run (shots=10000, your numbers will vary):
 ### Color code (`color_code:memory_xyz`)
 
 ```bash
-benchmark/.venv/bin/python benchmark/benchmark_decoders.py --code-task color_code:memory_xyz --compare-ilp-solvers --ilp-solvers highs,scip,gurobi,cbc,glpk --shots 10000 --distance 3 --rounds 3 --noise 0.01
+uv run --python benchmark/.venv/bin/python benchmark/benchmark_decoders.py \
+  --code-task color_code:memory_xyz --compare-ilp-solvers --ilp-solvers highs,scip,gurobi,cbc,glpk \
+  --shots 10000 --distance 3 --rounds 3 --noise 0.01
 ```
 
 Results from a local macOS arm64 run (shots=10000, your numbers will vary):

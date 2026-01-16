@@ -18,6 +18,9 @@ pip install ilpdecoder[pyomo]
 # Optional: direct Gurobi backend (licensed)
 pip install ilpdecoder[gurobi]
 
+# Optional: sinter integration (benchmarking)
+pip install ilpdecoder[sinter]
+
 # With Stim support
 pip install ilpdecoder[stim]
 
@@ -75,5 +78,6 @@ for i in range(5):
 - Solver backends and configuration: `solvers.md`
 - ILP formulation and assumptions: `math.md`
 - Stim DEM support and caveats: `stim_dem.md`
+- Sinter integration: `sinter.md`
 - Examples walkthrough: `examples.md`
 - Benchmarks and scripts: `benchmarks.md`

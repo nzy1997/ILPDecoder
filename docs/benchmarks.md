@@ -3,6 +3,27 @@
 This page summarizes the benchmark scripts and recent local results. Numbers
 will vary by machine and solver versions.
 
+## Benchmark Environment
+
+Use a dedicated virtual environment under `benchmark/` to avoid polluting your
+global Python:
+
+```bash
+python3 -m venv benchmark/.venv
+source benchmark/.venv/bin/activate
+python -m pip install --upgrade pip
+
+# ILPDecoder + optional solver backends
+python -m pip install -e ".[pyomo,gurobi]"
+
+# Benchmark dependencies
+python -m pip install stim pymatching ldpc
+```
+
+Notes:
+- Gurobi requires a valid license and Python < 3.13.
+- If you do not need Gurobi, drop `gurobi` from the extras.
+
 ## Requirements
 
 ```bash
