@@ -103,26 +103,6 @@ uv pip install -e ".[docs]"
 uv run mkdocs serve
 ```
 
-### Benchmark Environment (recommended)
-
-Benchmarks use extra dependencies (`stim`, `pymatching`, `ldpc`) and optional
-solvers. Use a dedicated virtual environment under `benchmark/`:
-
-```bash
-uv venv benchmark/.venv
-uv pip install --python benchmark/.venv/bin/python --upgrade pip
-
-# ILPDecoder + optional solver backends
-uv pip install --python benchmark/.venv/bin/python -e ".[pyomo,gurobi]"
-
-# Benchmark dependencies
-uv pip install --python benchmark/.venv/bin/python stim pymatching ldpc
-```
-
-Notes:
-- Gurobi requires a valid license and Python < 3.13.
-- If you do not need Gurobi, drop `gurobi` from the extras.
-
 ## Quick Start
 
 ### Parity-Check Matrix Decoding
@@ -249,13 +229,23 @@ Note: `error_probabilities` must be in (0, 0.5]; pass explicit `weights` for p >
 
 ## Benchmark
 
-Install optional deps for the benchmarks:
+Benchmarks use extra dependencies and optional solver backends. Use a dedicated
+virtual environment under `benchmark/`:
 
 ```bash
-uv pip install stim pymatching ldpc tesseract-decoder
+uv venv benchmark/.venv
+uv pip install --python benchmark/.venv/bin/python --upgrade pip
+
+# ILPDecoder + optional solver backends
+uv pip install --python benchmark/.venv/bin/python -e ".[pyomo,gurobi]"
+
+# Benchmark dependencies
+uv pip install --python benchmark/.venv/bin/python stim pymatching ldpc tesseract-decoder
 ```
 
 Notes:
+- Gurobi requires a valid license and Python < 3.13.
+- If you do not need Gurobi, drop `gurobi` from the extras.
 - BPOSD runs with `max_iter=50`, `osd_order=0`, and `bp_method=minimum_sum`.
 - Tesseract runs with `det_beam=50` by default (adjustable via `--tesseract-beam`).
 

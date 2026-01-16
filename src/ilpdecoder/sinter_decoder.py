@@ -13,6 +13,8 @@ from ilpdecoder.decoder import Decoder
 
 
 class _IlpCompiledDecoder(sinter.CompiledDecoder):
+    _chunk_size = 1024
+
     def __init__(self, decoder: Decoder, num_dets: int, num_obs: int):
         self._decoder = decoder
         self._num_dets = num_dets
@@ -24,17 +26,23 @@ class _IlpCompiledDecoder(sinter.CompiledDecoder):
         bit_packed_detection_event_data: np.ndarray,
     ) -> np.ndarray:
         num_shots = bit_packed_detection_event_data.shape[0]
+        num_obs_bytes = (self._num_obs + 7) // 8
         if self._num_dets == 0:
-            num_obs_bytes = (self._num_obs + 7) // 8
             return np.zeros((num_shots, num_obs_bytes), dtype=np.uint8)
 
-        shots = np.unpackbits(
-            bit_packed_detection_event_data, axis=1, bitorder="little"
-        )
-        shots = shots[:, : self._num_dets].astype(np.uint8, copy=False)
-        predictions = self._decoder.decode_batch(shots)
-        predictions = np.asarray(predictions, dtype=np.uint8)
-        return np.packbits(predictions, axis=1, bitorder="little")
+        out = np.zeros((num_shots, num_obs_bytes), dtype=np.uint8)
+        for start in range(0, num_shots, self._chunk_size):
+            end = min(start + self._chunk_size, num_shots)
+            shots = np.unpackbits(
+                bit_packed_detection_event_data[start:end],
+                axis=1,
+                bitorder="little",
+            )
+            shots = shots[:, : self._num_dets].astype(np.uint8, copy=False)
+            predictions = self._decoder.decode_batch(shots)
+            predictions = np.asarray(predictions, dtype=np.uint8)
+            out[start:end] = np.packbits(predictions, axis=1, bitorder="little")
+        return out
 
 
 class SinterIlpDecoder(sinter.Decoder):
@@ -89,8 +97,9 @@ class SinterIlpDecoder(sinter.Decoder):
         tmp_dir: pathlib.Path,
     ) -> None:
         if num_dets == 0:
+            num_obs_bytes = (num_obs + 7) // 8
             with open(obs_predictions_b8_out_path, "wb") as handle:
-                handle.write(b"\0" * (num_obs * num_shots))
+                handle.write(b"\0" * (num_obs_bytes * num_shots))
             return
 
         dem = stim.DetectorErrorModel.from_file(dem_path)

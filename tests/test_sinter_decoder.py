@@ -66,3 +66,59 @@ def test_sinter_decode_via_files(tmp_path):
         path=obs_path, format="b8", num_observables=1
     )
     np.testing.assert_array_equal(predictions, shots)
+
+
+def test_sinter_decode_via_files_no_detectors(tmp_path):
+    _require_highs()
+    stim = _require_sinter_and_stim()
+    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+
+    dem = stim.DetectorErrorModel("")
+    dem_path = tmp_path / "model.dem"
+    dets_path = tmp_path / "dets.b8"
+    obs_path = tmp_path / "obs.b8"
+    dem.to_file(dem_path)
+    dets_path.write_bytes(b"")
+
+    decoder = SinterIlpDecoder()
+    decoder.decode_via_files(
+        num_shots=3,
+        num_dets=0,
+        num_obs=9,
+        dem_path=dem_path,
+        dets_b8_in_path=dets_path,
+        obs_predictions_b8_out_path=obs_path,
+        tmp_dir=tmp_path,
+    )
+
+    predictions = stim.read_shot_data_file(
+        path=obs_path, format="b8", num_observables=9
+    )
+    assert predictions.shape == (3, 9)
+    assert not predictions.any()
+
+
+def test_sinter_collect_end_to_end():
+    _require_highs()
+    stim = _require_sinter_and_stim()
+    import sinter
+
+    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+
+    circuit = stim.Circuit.generated(
+        "repetition_code:memory",
+        distance=3,
+        rounds=3,
+        before_round_data_depolarization=0.01,
+    )
+    dem = circuit.detector_error_model(decompose_errors=True)
+    task = sinter.Task(circuit=circuit, decoder="ilp", detector_error_model=dem)
+    stats = sinter.collect(
+        num_workers=1,
+        tasks=[task],
+        max_shots=5,
+        custom_decoders={"ilp": SinterIlpDecoder()},
+    )
+
+    assert len(stats) == 1
+    assert stats[0].shots > 0
