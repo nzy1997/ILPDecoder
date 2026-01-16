@@ -6,7 +6,7 @@ will vary by machine and solver versions.
 ## Requirements
 
 ```bash
-pip install stim pymatching ldpc
+pip install stim pymatching ldpc tesseract-decoder
 ```
 
 Non-HiGHS solvers require the Pyomo extra (`pip install ilpdecoder[pyomo]`),
@@ -17,6 +17,7 @@ Notes:
 - Direct backends: HiGHS, Gurobi.
 - Pyomo backends: HiGHS, SCIP, CBC, GLPK, Gurobi, CPLEX.
 - BPOSD runs with `max_iter=50`, `osd_order=0`, and `bp_method=minimum_sum`.
+- Tesseract runs with `det_beam=50` by default (adjustable via `--tesseract-beam`).
 
 ## Circuit-level rotated surface code memory
 
@@ -37,6 +38,7 @@ Results from a local macOS arm64 run (shots=10000):
 | ILP[glpk] (Pyomo) | 7.8176 | 1.610% |
 | MWPM (pymatching) | 0.0034 | 2.090% |
 | BPOSD (ldpc) | 0.0308 | 7.740% |
+| Tesseract | TBD | TBD |
 
 ## Code-capacity surface code (data errors only, perfect syndrome)
 
@@ -58,6 +60,7 @@ Results from a local macOS arm64 run (shots=10000):
 | ILP[glpk] (Pyomo) | 4.7919 | 0.120% |
 | MWPM (pymatching) | 0.0033 | 0.120% |
 | BPOSD (ldpc) | 0.0029 | 0.120% |
+| Tesseract | TBD | TBD |
 
 ## Color code (`color_code:memory_xyz`)
 
@@ -79,3 +82,4 @@ Results from a local macOS arm64 run (shots=10000):
 | ILP[glpk] (Pyomo) | 5.8961 | 4.500% |
 | MWPM (pymatching) | 0.0041 | 13.610% |
 | BPOSD (ldpc) | 0.0124 | 9.970% |
+| Tesseract | TBD | TBD |
