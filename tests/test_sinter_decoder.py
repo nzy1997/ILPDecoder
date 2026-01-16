@@ -35,6 +35,25 @@ def test_sinter_compiled_decoder_bit_packed_roundtrip():
     np.testing.assert_array_equal(pred_bits, shots)
 
 
+def test_sinter_compiled_decoder_bit_packed_no_detectors():
+    _require_highs()
+    stim = _require_sinter_and_stim()
+    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+
+    dem = stim.DetectorErrorModel("error(0.1) L0")
+    decoder = SinterIlpDecoder()
+    compiled = decoder.compile_decoder_for_dem(dem=dem)
+
+    bit_packed = np.zeros((4, 0), dtype=np.uint8)
+    predictions = compiled.decode_shots_bit_packed(
+        bit_packed_detection_event_data=bit_packed
+    )
+
+    assert predictions.shape == (4, 1)
+    assert predictions.dtype == np.uint8
+    assert not predictions.any()
+
+
 def test_sinter_decode_via_files(tmp_path):
     _require_highs()
     stim = _require_sinter_and_stim()
