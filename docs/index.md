@@ -1,6 +1,6 @@
-# ILPDecoder
+# ILPQEC
 
-ILPDecoder is a Python package for maximum-likelihood quantum error correction decoding
+ILPQEC is a Python package for maximum-likelihood quantum error correction decoding
 using integer linear programming (ILP). It builds an ILP from parity-check matrices
 or Stim DetectorErrorModels and solves it with a direct HiGHS backend by default
 (no Pyomo required). Optional backends are available for direct Gurobi (licensed)
@@ -8,24 +8,26 @@ or Pyomo-based solvers.
 
 ## Installation
 
+PyPI package and import name: `ilpqec`.
+
 ```bash
 # Basic installation (direct HiGHS backend)
-pip install ilpdecoder
+pip install ilpqec
 
 # Optional: Pyomo backend for other solvers
-pip install ilpdecoder[pyomo]
+pip install ilpqec[pyomo]
 
 # Optional: direct Gurobi backend (licensed)
-pip install ilpdecoder[gurobi]
+pip install ilpqec[gurobi]
 
 # Optional: sinter integration (benchmarking)
-pip install ilpdecoder[sinter]
+pip install ilpqec[sinter]
 
 # With Stim support
-pip install ilpdecoder[stim]
+pip install ilpqec[stim]
 
 # With SciPy sparse-matrix support
-pip install ilpdecoder[scipy]
+pip install ilpqec[scipy]
 ```
 
 ## Quickstart
@@ -34,7 +36,7 @@ pip install ilpdecoder[scipy]
 
 ```python
 import numpy as np
-from ilpdecoder import Decoder
+from ilpqec import Decoder
 
 H = np.array([
     [1, 1, 0],
@@ -53,7 +55,7 @@ print(error)
 
 ```python
 import stim
-from ilpdecoder import Decoder
+from ilpqec import Decoder
 
 circuit = stim.Circuit.generated(
     "surface_code:rotated_memory_x",

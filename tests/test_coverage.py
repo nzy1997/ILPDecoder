@@ -9,9 +9,9 @@ import importlib.util
 import numpy as np
 import pytest
 
-import ilpdecoder.decoder as decoder_module
-import ilpdecoder.solver as solver_module
-from ilpdecoder import Decoder
+import ilpqec.decoder as decoder_module
+import ilpqec.solver as solver_module
+from ilpqec import Decoder
 
 HAS_SCIPY = importlib.util.find_spec("scipy") is not None
 HAS_STIM = importlib.util.find_spec("stim") is not None
@@ -545,7 +545,7 @@ def test_solve_direct_gurobi_uses_backend(monkeypatch):
         def solve(self, syndrome):
             return np.array([1], dtype=np.uint8), 2.0, "ok"
 
-    import ilpdecoder.gurobi_backend as gb
+    import ilpqec.gurobi_backend as gb
 
     monkeypatch.setattr(gb, "DirectGurobiSolver", FakeBackend)
     correction, objective = decoder._solve_direct_gurobi(np.array([1], dtype=np.uint8))

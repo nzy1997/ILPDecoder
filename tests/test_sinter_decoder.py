@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from ilpdecoder import get_available_solvers
+from ilpqec import get_available_solvers
 
 
 def _require_sinter_and_stim():
@@ -19,7 +19,7 @@ def _require_highs():
 def test_sinter_compiled_decoder_bit_packed_roundtrip():
     _require_highs()
     stim = _require_sinter_and_stim()
-    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+    from ilpqec.sinter_decoder import SinterIlpDecoder
 
     dem = stim.DetectorErrorModel("error(0.1) D0 L0")
     decoder = SinterIlpDecoder()
@@ -38,7 +38,7 @@ def test_sinter_compiled_decoder_bit_packed_roundtrip():
 def test_sinter_compiled_decoder_bit_packed_no_detectors():
     _require_highs()
     stim = _require_sinter_and_stim()
-    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+    from ilpqec.sinter_decoder import SinterIlpDecoder
 
     dem = stim.DetectorErrorModel("error(0.1) L0")
     decoder = SinterIlpDecoder()
@@ -57,7 +57,7 @@ def test_sinter_compiled_decoder_bit_packed_no_detectors():
 def test_sinter_decode_via_files(tmp_path):
     _require_highs()
     stim = _require_sinter_and_stim()
-    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+    from ilpqec.sinter_decoder import SinterIlpDecoder
 
     dem = stim.DetectorErrorModel("error(0.1) D0 L0")
     dem_path = tmp_path / "model.dem"
@@ -90,7 +90,7 @@ def test_sinter_decode_via_files(tmp_path):
 def test_sinter_decode_via_files_no_detectors(tmp_path):
     _require_highs()
     stim = _require_sinter_and_stim()
-    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+    from ilpqec.sinter_decoder import SinterIlpDecoder
 
     dem = stim.DetectorErrorModel("")
     dem_path = tmp_path / "model.dem"
@@ -122,7 +122,7 @@ def test_sinter_collect_end_to_end():
     stim = _require_sinter_and_stim()
     import sinter
 
-    from ilpdecoder.sinter_decoder import SinterIlpDecoder
+    from ilpqec.sinter_decoder import SinterIlpDecoder
 
     circuit = stim.Circuit.generated(
         "repetition_code:memory",

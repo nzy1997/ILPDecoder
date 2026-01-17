@@ -1,16 +1,16 @@
 """
-ILPDecoder - ILP-based Quantum Error Correction Decoder
+ILPQEC - ILP-based Quantum Error Correction Decoder
 
 Run basic functionality test.
 """
 
 import numpy as np
-from ilpdecoder import Decoder, get_available_solvers
+from ilpqec import Decoder, get_available_solvers
 
 
 def main():
     """Run basic functionality test."""
-    print("ILPDecoder - ILP-based QEC Decoder (direct HiGHS backend)")
+    print("ILPQEC - ILP-based QEC Decoder (direct HiGHS backend)")
     print("=" * 50)
     
     available = get_available_solvers()
@@ -20,8 +20,8 @@ def main():
         print("\nNo solver available!")
         print("Please install one of:")
         print("  - HiGHS: pip install highspy")
-        print("  - Gurobi: pip install ilpdecoder[gurobi]")
-        print("  - Pyomo solvers: pip install ilpdecoder[pyomo]")
+        print("  - Gurobi: pip install ilpqec[gurobi]")
+        print("  - Pyomo solvers: pip install ilpqec[pyomo]")
         return 1
     
     # Test with simple repetition code

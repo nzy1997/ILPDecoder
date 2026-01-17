@@ -1,4 +1,4 @@
-"""Direct Gurobi backend for ILPDecoder."""
+"""Direct Gurobi backend for ILPQEC."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from typing import Any, Tuple
 
 import numpy as np
 
-from ilpdecoder.solver import SolverConfig
+from ilpqec.solver import SolverConfig
 
 
 class DirectGurobiSolver:
@@ -19,7 +19,7 @@ class DirectGurobiSolver:
         except Exception as exc:
             raise ImportError(
                 "Direct Gurobi backend requires gurobipy. "
-                "Install with: pip install ilpdecoder[gurobi]"
+                "Install with: pip install ilpqec[gurobi]"
             ) from exc
 
         self._gp = gp

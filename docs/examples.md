@@ -19,7 +19,7 @@ python examples/basic_usage.py
 ```python
 import numpy as np
 
-from ilpdecoder import Decoder, get_available_solvers
+from ilpqec import Decoder, get_available_solvers
 ```
 
 These imports cover matrix handling and the main decoder API.
@@ -199,7 +199,7 @@ This shows the vectorized batch API and a quick validity check.
 ```python
 def main():
     """Run all examples."""
-    print("ILPDecoder Examples")
+    print("ILPQEC Examples")
     print("=" * 60)
     print(f"Available solvers: {get_available_solvers()}")
 
@@ -244,7 +244,7 @@ try:
 except ImportError:
     STIM_AVAILABLE = False
 
-from ilpdecoder import Decoder, get_available_solvers
+from ilpqec import Decoder, get_available_solvers
 ```
 
 This loads Stim if available and sets a flag so the script can exit cleanly
@@ -256,7 +256,7 @@ when Stim is missing.
 def surface_code_example():
     """Decode a rotated surface code using ILP."""
     print("=" * 60)
-    print("Surface Code Decoding with ILPDecoder")
+    print("Surface Code Decoding with ILPQEC")
     print("=" * 60)
 
     if not STIM_AVAILABLE:
@@ -373,7 +373,7 @@ This provides a quick solver timing comparison on a small test case.
 
 ```python
 def main():
-    print("ILPDecoder Surface Code Example")
+    print("ILPQEC Surface Code Example")
     print("=" * 60)
 
     surface_code_example()

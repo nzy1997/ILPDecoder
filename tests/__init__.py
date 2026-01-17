@@ -1,1 +1,1 @@
-"""Tests for ILPDecoder package."""
+"""Tests for ILPQEC package."""

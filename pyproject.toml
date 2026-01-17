@@ -1,5 +1,5 @@
 [project]
-name = "ilpdecoder"
+name = "ilpqec"
 version = "0.1.0"
 description = "ILP-based Quantum Error Correction Decoder"
 readme = "README.md"
@@ -7,7 +7,7 @@ requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-    {name = "ILPDecoder Contributors"}
+    {name = "ILPQEC Contributors"}
 ]
 keywords = [
     "quantum-computing",
@@ -67,9 +67,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nzy1997/ILPDecoder"
-Documentation = "https://nzy1997.github.io/ILPDecoder/"
-Repository = "https://github.com/nzy1997/ILPDecoder"
+Homepage = "https://github.com/nzy1997/ILPQEC"
+Documentation = "https://nzy1997.github.io/ILPQEC/"
+Repository = "https://github.com/nzy1997/ILPQEC"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
@@ -77,7 +77,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["ilpdecoder*"]
+include = ["ilpqec*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -103,7 +103,7 @@ convention = "google"
 
 [tool.coverage.run]
 omit = [
-    "src/ilpdecoder/gurobi_backend.py",
+    "src/ilpqec/gurobi_backend.py",
 ]
 
 [dependency-groups]

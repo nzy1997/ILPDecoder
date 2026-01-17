@@ -1,12 +1,12 @@
 # Sinter Integration
 
-ILPDecoder provides a sinter decoder wrapper for benchmarking and sampling
+ILPQEC provides a sinter decoder wrapper for benchmarking and sampling
 workflows that use Stim + sinter.
 
 ## Install
 
 ```bash
-pip install ilpdecoder[sinter]
+pip install ilpqec[sinter]
 ```
 
 This extra installs `sinter` and `stim`. The sinter adapter currently uses the
@@ -17,7 +17,7 @@ direct HiGHS backend only.
 ```python
 import sinter
 import stim
-from ilpdecoder.sinter_decoder import SinterIlpDecoder
+from ilpqec.sinter_decoder import SinterIlpDecoder
 
 circuit = stim.Circuit.generated(
     "surface_code:rotated_memory_x",
@@ -29,14 +29,14 @@ circuit = stim.Circuit.generated(
 tasks = [
     sinter.Task(
         circuit=circuit,
-        decoder="ilpdecoder",
+        decoder="ilpqec",
         json_metadata={"d": 3, "r": 3},
     )
 ]
 
 stats = sinter.collect(
     tasks=tasks,
-    custom_decoders={"ilpdecoder": SinterIlpDecoder()},
+    custom_decoders={"ilpqec": SinterIlpDecoder()},
 )
 ```
 

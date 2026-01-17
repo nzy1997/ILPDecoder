@@ -2,7 +2,7 @@
 
 import pytest
 
-from ilpdecoder.solver import (
+from ilpqec.solver import (
     SolverConfig,
     get_available_solvers,
     get_default_solver,

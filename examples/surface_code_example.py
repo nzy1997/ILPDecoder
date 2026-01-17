@@ -2,7 +2,7 @@
 Surface code decoding example using Stim integration.
 
 Requirements:
-    pip install stim ilpdecoder
+    pip install stim ilpqec
     Plus a solver (SCIP, HiGHS, etc.)
 """
 
@@ -14,13 +14,13 @@ try:
 except ImportError:
     STIM_AVAILABLE = False
 
-from ilpdecoder import Decoder, get_available_solvers
+from ilpqec import Decoder, get_available_solvers
 
 
 def surface_code_example():
     """Decode a rotated surface code using ILP."""
     print("=" * 60)
-    print("Surface Code Decoding with ILPDecoder")
+    print("Surface Code Decoding with ILPQEC")
     print("=" * 60)
     
     if not STIM_AVAILABLE:
@@ -126,7 +126,7 @@ def compare_solvers():
 
 
 def main():
-    print("ILPDecoder Surface Code Example")
+    print("ILPQEC Surface Code Example")
     print("=" * 60)
     
     surface_code_example()

@@ -1,5 +1,5 @@
 """
-Benchmark ILPDecoder vs MWPM (pymatching), BPOSD (ldpc), and Tesseract on circuit-level decoding.
+Benchmark ILPQEC vs MWPM (pymatching), BPOSD (ldpc), and Tesseract on circuit-level decoding.
 
 Requirements:
     pip install stim pymatching ldpc tesseract-decoder
@@ -12,7 +12,7 @@ import time
 
 import numpy as np
 
-from ilpdecoder import Decoder, get_available_solvers
+from ilpqec import Decoder, get_available_solvers
 
 
 def parse_dem(dem):
@@ -260,9 +260,9 @@ def main():
                     print(f"ILP[{solver}]   skipped ({exc})")
     else:
         if not available_solvers:
-            print("ILPDecoder   skipped (no solver available)")
+            print("ILPQEC   skipped (no solver available)")
         elif args.solver and args.solver.lower() not in available_solvers:
-            print(f"ILPDecoder   skipped (solver '{args.solver}' not available)")
+            print(f"ILPQEC   skipped (solver '{args.solver}' not available)")
         else:
             try:
                 ilp_decoder = Decoder.from_stim_dem(dem, solver=args.solver)
@@ -271,9 +271,9 @@ def main():
                     _, pred = ilp_decoder.decode(det)
                     return pred
 
-                benchmark("ILPDecoder", detections, observables, ilp_decode)
+                benchmark("ILPQEC", detections, observables, ilp_decode)
             except Exception as exc:
-                print(f"ILPDecoder   skipped ({exc})")
+                print(f"ILPQEC   skipped ({exc})")
 
     try:
         mwpm = build_pymatching(dem)

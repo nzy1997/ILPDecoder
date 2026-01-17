@@ -1,6 +1,6 @@
 # ILP Model for QEC Decoding
 
-This page summarizes the integer linear program (ILP) used by ILPDecoder.
+This page summarizes the integer linear program (ILP) used by ILPQEC.
 
 ## Notation
 
@@ -53,7 +53,7 @@ w_j = \log\left(\frac{1 - p_j}{p_j}\right).
 $$
 
 Minimizing the weighted sum is equivalent to maximum-likelihood decoding
-under the independent error model. ILPDecoder requires $p_j \in (0, 0.5]$ and
+under the independent error model. ILPQEC requires $p_j \in (0, 0.5]$ and
 rejects larger values; provide explicit weights if $p_j > 0.5$.
 
 ## Observables (Stim DEM)

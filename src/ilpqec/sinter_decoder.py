@@ -1,4 +1,4 @@
-"""Sinter adapter for ILPDecoder (HiGHS direct backend only)."""
+"""Sinter adapter for ILPQEC (HiGHS direct backend only)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import numpy as np
 import sinter
 import stim
 
-from ilpdecoder.decoder import Decoder
+from ilpqec.decoder import Decoder
 
 
 class _IlpCompiledDecoder(sinter.CompiledDecoder):
@@ -46,7 +46,7 @@ class _IlpCompiledDecoder(sinter.CompiledDecoder):
 
 
 class SinterIlpDecoder(sinter.Decoder):
-    """Use ILPDecoder (direct HiGHS backend) to predict observables from detections."""
+    """Use ILPQEC (direct HiGHS backend) to predict observables from detections."""
 
     def __init__(
         self,

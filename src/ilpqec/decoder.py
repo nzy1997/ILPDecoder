@@ -38,7 +38,7 @@ import math
 
 import numpy as np
 
-from ilpdecoder.solver import (
+from ilpqec.solver import (
     SolverConfig,
     get_default_solver,
     get_pyomo_solver_name,
@@ -324,7 +324,7 @@ class Decoder:
                 if not is_gurobi_available():
                     raise ImportError(
                         "Direct Gurobi backend requires gurobipy. "
-                        "Install with: pip install ilpdecoder[gurobi]"
+                        "Install with: pip install ilpqec[gurobi]"
                     )
             else:
                 raise ValueError("Direct backend currently supports HiGHS and Gurobi only.")
@@ -332,17 +332,17 @@ class Decoder:
             if solver_name == "highs":
                 message = (
                     "Pyomo is required for the Pyomo HiGHS backend. "
-                    "Install with: pip install ilpdecoder[pyomo]"
+                    "Install with: pip install ilpqec[pyomo]"
                 )
             elif solver_name == "gurobi":
                 message = (
                     "Gurobi requires gurobipy (direct backend) or Pyomo. "
-                    "Install with: pip install ilpdecoder[gurobi] or ilpdecoder[pyomo]"
+                    "Install with: pip install ilpqec[gurobi] or ilpqec[pyomo]"
                 )
             else:
                 message = (
                     "Pyomo is required for non-HiGHS solvers. "
-                    "Install with: pip install ilpdecoder[pyomo]"
+                    "Install with: pip install ilpqec[pyomo]"
                 )
             raise ImportError(message)
 
@@ -623,7 +623,7 @@ class Decoder:
     def _solve_direct_gurobi(self, syndrome: np.ndarray) -> Tuple[np.ndarray, float]:
         """Solve the ILP using a direct Gurobi model reused across shots."""
         if self._direct_gurobi_solver is None:
-            from ilpdecoder.gurobi_backend import DirectGurobiSolver
+            from ilpqec.gurobi_backend import DirectGurobiSolver
 
             self._direct_gurobi_solver = DirectGurobiSolver(
                 self._H, self._weights, self._solver_config

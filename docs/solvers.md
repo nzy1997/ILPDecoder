@@ -1,25 +1,25 @@
 # Solver Backends
 
-ILPDecoder uses a direct HiGHS backend by default. Optional backends are
+ILPQEC uses a direct HiGHS backend by default. Optional backends are
 available for direct Gurobi (licensed) and for Pyomo-based solvers.
 
 ## Backend Matrix
 
 | Solver | Backend | Install | Notes |
 | --- | --- | --- | --- |
-| HiGHS | Direct | `pip install ilpdecoder` | Default backend via highspy. |
-| HiGHS | Pyomo | `pip install ilpdecoder[pyomo]` + HiGHS binary | Optional Pyomo path. |
-| Gurobi | Direct | `pip install ilpdecoder[gurobi]` | Requires a valid license. |
-| Gurobi | Pyomo | `pip install ilpdecoder[pyomo]` + gurobi | Uses Pyomo interface. |
-| SCIP | Pyomo | `pip install ilpdecoder[pyomo]` + scip | Open source (binary required). |
-| CBC | Pyomo | `pip install ilpdecoder[pyomo]` + cbc | Open source (binary required). |
-| GLPK | Pyomo | `pip install ilpdecoder[pyomo]` + glpk | Open source (binary required). |
-| CPLEX | Pyomo | `pip install ilpdecoder[pyomo]` + cplex | Commercial license. |
+| HiGHS | Direct | `pip install ilpqec` | Default backend via highspy. |
+| HiGHS | Pyomo | `pip install ilpqec[pyomo]` + HiGHS binary | Optional Pyomo path. |
+| Gurobi | Direct | `pip install ilpqec[gurobi]` | Requires a valid license. |
+| Gurobi | Pyomo | `pip install ilpqec[pyomo]` + gurobi | Uses Pyomo interface. |
+| SCIP | Pyomo | `pip install ilpqec[pyomo]` + scip | Open source (binary required). |
+| CBC | Pyomo | `pip install ilpqec[pyomo]` + cbc | Open source (binary required). |
+| GLPK | Pyomo | `pip install ilpqec[pyomo]` + glpk | Open source (binary required). |
+| CPLEX | Pyomo | `pip install ilpqec[pyomo]` + cplex | Commercial license. |
 
 ## Switching Solvers
 
 ```python
-from ilpdecoder import Decoder
+from ilpqec import Decoder
 
 # Create a decoder and switch backends later.
 decoder = Decoder.from_parity_check_matrix(H)
@@ -31,7 +31,7 @@ decoder.set_solver("scip", time_limit=30)
 decoder.set_solver("gurobi")
 ```
 
-If a non-HiGHS solver is requested without Pyomo installed, ILPDecoder fails
+If a non-HiGHS solver is requested without Pyomo installed, ILPQEC fails
 fast with a one-line install hint.
 
 ## Solver Options

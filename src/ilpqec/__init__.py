@@ -1,11 +1,11 @@
 """
-ILPDecoder: ILP-based Quantum Error Correction Decoder
+ILPQEC: ILP-based Quantum Error Correction Decoder
 
 A PyMatching-like decoder using a direct HiGHS backend by default, with
 an optional direct Gurobi backend and a Pyomo backend for other solvers.
 
 Example:
-    >>> from ilpdecoder import Decoder
+    >>> from ilpqec import Decoder
     >>> 
     >>> # Create decoder from parity-check matrix
     >>> decoder = Decoder.from_parity_check_matrix(H)
@@ -27,8 +27,8 @@ Supported Solvers:
     - glpk: GNU Linear Programming Kit (Pyomo required)
 """
 
-from ilpdecoder.decoder import Decoder
-from ilpdecoder.solver import get_available_solvers, get_default_solver, SolverConfig
+from ilpqec.decoder import Decoder
+from ilpqec.solver import get_available_solvers, get_default_solver, SolverConfig
 
 __version__ = "0.1.0"
 __all__ = ["Decoder", "get_available_solvers", "get_default_solver", "SolverConfig"]

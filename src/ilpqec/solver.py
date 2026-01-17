@@ -1,5 +1,5 @@
 """
-Solver configuration for ILPDecoder.
+Solver configuration for ILPQEC.
 
 This module provides solver configuration for selecting and configuring backends.
 The default backend is direct HiGHS; direct Gurobi is optional; Pyomo is used
@@ -140,7 +140,7 @@ def require_pyomo() -> None:
     if not is_pyomo_available():
         raise ImportError(
             "Pyomo is required for non-HiGHS solvers. "
-            "Install with: pip install ilpdecoder[pyomo]"
+            "Install with: pip install ilpqec[pyomo]"
         )
 
 
@@ -217,8 +217,8 @@ def get_default_solver() -> str:
     raise RuntimeError(
         "No ILP solver available. Please install one of:\n"
         "  - HiGHS: pip install highspy\n"
-        "  - Gurobi: pip install ilpdecoder[gurobi]\n"
-        "  - Pyomo solvers: pip install ilpdecoder[pyomo]"
+        "  - Gurobi: pip install ilpqec[gurobi]\n"
+        "  - Pyomo solvers: pip install ilpqec[pyomo]"
     )
 
 

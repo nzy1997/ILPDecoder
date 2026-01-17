@@ -1,6 +1,6 @@
 # Stim DetectorErrorModel Support
 
-ILPDecoder parses Stim DetectorErrorModels into an ILP by extracting the
+ILPQEC parses Stim DetectorErrorModels into an ILP by extracting the
 `error(p)` mechanisms and building parity-check and observable matrices.
 
 ## Supported Instructions
@@ -14,7 +14,7 @@ ILPDecoder parses Stim DetectorErrorModels into an ILP by extracting the
 ## The `^` Separator
 
 Stim uses `^` to describe alternative components of a correlated mechanism.
-ILPDecoder currently treats `^` as whitespace, which discards the alternative
+ILPQEC currently treats `^` as whitespace, which discards the alternative
 structure. If your DEM contains `^`, prefer `decompose_errors=True` when
 building the DEM so each error is a single unambiguous mechanism.
 

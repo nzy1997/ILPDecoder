@@ -13,7 +13,7 @@ python3 -m venv benchmark/.venv
 source benchmark/.venv/bin/activate
 python -m pip install --upgrade pip
 
-# ILPDecoder + optional solver backends
+# ILPQEC + optional solver backends
 python -m pip install -e ".[pyomo,gurobi]"
 
 # Benchmark dependencies
@@ -30,8 +30,8 @@ Notes:
 pip install stim pymatching ldpc tesseract-decoder
 ```
 
-Non-HiGHS solvers require the Pyomo extra (`pip install ilpdecoder[pyomo]`),
-except for the direct Gurobi backend (`pip install ilpdecoder[gurobi]`).
+Non-HiGHS solvers require the Pyomo extra (`pip install ilpqec[pyomo]`),
+except for the direct Gurobi backend (`pip install ilpqec[gurobi]`).
 
 Notes:
 

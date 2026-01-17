@@ -1,11 +1,11 @@
-# ILPDecoder
+# ILPQEC
 
-[![CI](https://github.com/nzy1997/ILPDecoder/actions/workflows/ci.yml/badge.svg)](https://github.com/nzy1997/ILPDecoder/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/nzy1997/ILPDecoder/branch/main/graph/badge.svg)](https://codecov.io/gh/nzy1997/ILPDecoder)
+[![CI](https://github.com/nzy1997/ILPQEC/actions/workflows/ci.yml/badge.svg)](https://github.com/nzy1997/ILPQEC/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/nzy1997/ILPQEC/branch/main/graph/badge.svg)](https://codecov.io/gh/nzy1997/ILPQEC)
 
-ILPDecoder is a Python package for maximum-likelihood quantum error correction decoding using integer linear programming (ILP). It turns parity-check matrices or Stim `DetectorErrorModel`s into an ILP and solves it with a built-in backend out of the box. It is aimed at correctness-focused baselines, solver comparisons, and small-to-medium code studies rather than high-throughput production decoding.
+ILPQEC is a Python package for maximum-likelihood quantum error correction decoding using integer linear programming (ILP). It turns parity-check matrices or Stim `DetectorErrorModel`s into an ILP and solves it with a built-in backend out of the box. It is aimed at correctness-focused baselines, solver comparisons, and small-to-medium code studies rather than high-throughput production decoding.
 
-Documentation: https://nzy1997.github.io/ILPDecoder/
+Documentation: https://nzy1997.github.io/ILPQEC/
 
 ## Scope and Highlights
 
@@ -22,7 +22,7 @@ When it is not a fit:
 
 ### Python Environment Setup
 
-ILPDecoder supports Python 3.9+ (3.9–3.12 recommended). If you plan to use
+ILPQEC supports Python 3.9+ (3.9–3.12 recommended). If you plan to use
 Gurobi, install Python < 3.13 because `gurobipy` wheels are not available on
 3.13 at the moment.
 
@@ -44,26 +44,28 @@ uv pip install --upgrade pip
 
 ### Install the Package
 
+PyPI package and import name: `ilpqec`.
+
 ```bash
 # Basic installation
-uv pip install ilpdecoder
+uv pip install ilpqec
 
 # With Stim support
-uv pip install ilpdecoder[stim]
+uv pip install ilpqec[stim]
 
 # With sinter integration
-uv pip install ilpdecoder[sinter]
+uv pip install ilpqec[sinter]
 
 # With SciPy sparse-matrix support
-uv pip install ilpdecoder[scipy]
+uv pip install ilpqec[scipy]
 ```
 
 ### Development Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/nzy1997/ILPDecoder
-cd ILPDecoder
+git clone https://github.com/nzy1997/ILPQEC
+cd ILPQEC
 
 # Create virtual environment (using uv)
 uv venv
@@ -109,7 +111,7 @@ uv run mkdocs serve
 
 ```python
 import numpy as np
-from ilpdecoder import Decoder
+from ilpqec import Decoder
 
 # Define a simple repetition code parity-check matrix
 H = np.array([
@@ -128,13 +130,13 @@ correction = decoder.decode(syndrome)
 print(f"Correction: {correction}")
 ```
 
-Note: passing SciPy sparse matrices requires `scipy` to be installed (e.g., `uv pip install ilpdecoder[scipy]`).
+Note: passing SciPy sparse matrices requires `scipy` to be installed (e.g., `uv pip install ilpqec[scipy]`).
 
 ### Stim DetectorErrorModel Decoding
 
 ```python
 import stim
-from ilpdecoder import Decoder
+from ilpqec import Decoder
 
 # Generate a surface code circuit
 circuit = stim.Circuit.generated(
@@ -170,11 +172,11 @@ for i in range(10):
 
 ### Sinter Integration (optional)
 
-ILPDecoder includes a sinter decoder wrapper for benchmarking and sampling.
+ILPQEC includes a sinter decoder wrapper for benchmarking and sampling.
 Install with:
 
 ```bash
-uv pip install ilpdecoder[sinter]
+uv pip install ilpqec[sinter]
 ```
 
 Example usage:
@@ -182,7 +184,7 @@ Example usage:
 ```python
 import sinter
 import stim
-from ilpdecoder.sinter_decoder import SinterIlpDecoder
+from ilpqec.sinter_decoder import SinterIlpDecoder
 
 circuit = stim.Circuit.generated(
     "surface_code:rotated_memory_x",
@@ -194,25 +196,25 @@ circuit = stim.Circuit.generated(
 tasks = [
     sinter.Task(
         circuit=circuit,
-        decoder="ilpdecoder",
+        decoder="ilpqec",
     )
 ]
 
 stats = sinter.collect(
     tasks=tasks,
-    custom_decoders={"ilpdecoder": SinterIlpDecoder()},
+    custom_decoders={"ilpqec": SinterIlpDecoder()},
 )
 ```
 
 Notes:
 - The sinter adapter currently uses the direct HiGHS backend only.
-- `ilpdecoder[sinter]` includes `stim` and `sinter` dependencies.
+- `ilpqec[sinter]` includes `stim` and `sinter` dependencies.
 
 ### Maximum-Likelihood Decoding with Weights
 
 ```python
 import numpy as np
-from ilpdecoder import Decoder
+from ilpqec import Decoder
 
 H = np.array([[1, 1, 0], [0, 1, 1]])
 error_probs = [0.1, 0.01, 0.1]
@@ -236,7 +238,7 @@ virtual environment under `benchmark/`:
 uv venv benchmark/.venv
 uv pip install --python benchmark/.venv/bin/python --upgrade pip
 
-# ILPDecoder + optional solver backends
+# ILPQEC + optional solver backends
 uv pip install --python benchmark/.venv/bin/python -e ".[pyomo,gurobi]"
 
 # Benchmark dependencies
@@ -338,7 +340,7 @@ Main decoder class.
 Returns a list of available solver names.
 
 ```python
-from ilpdecoder import get_available_solvers
+from ilpqec import get_available_solvers
 print(get_available_solvers())  # e.g., ['scip', 'highs', 'cbc']
 ```
 
